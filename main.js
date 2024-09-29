@@ -2,12 +2,12 @@ let books = [];
 
 function addBook(event) {
     event.preventDefault();
-    
+
     const titleInput = document.querySelector("#bookFormTitle");
     const authorInput = document.querySelector("#bookFormAuthor");
     const yearInput = document.querySelector("#bookFormYear");
     const isCompleteInput = document.querySelector("#bookFormIsComplete");
-    
+
     const newBook = {
         id: +new Date(),
         title: titleInput.value,
@@ -23,11 +23,11 @@ function addBook(event) {
 
 function searchBook(event) {
     event.preventDefault();
-    
+
     const searchInput = document.querySelector("#searchBookTitle");
     const query = searchInput.value.toLowerCase();
-    const filteredBooks = query 
-        ? books.filter(book => book.title.toLowerCase().includes(query)) 
+    const filteredBooks = query
+        ? books.filter(book => book.title.toLowerCase().includes(query))
         : [];
 
     displaySearchResults(filteredBooks);
@@ -36,7 +36,7 @@ function searchBook(event) {
 function completeBook(event) {
     const bookId = Number(event.target.closest('[data-bookid]').getAttribute('data-bookid'));
     const index = books.findIndex(book => book.id === bookId);
-    
+
     if (index !== -1) {
         books[index].isComplete = true;
         document.dispatchEvent(new Event("bookChanged"));
@@ -46,7 +46,7 @@ function completeBook(event) {
 function moveToIncomplete(event) {
     const bookId = Number(event.target.closest('[data-bookid]').getAttribute('data-bookid'));
     const index = books.findIndex(book => book.id === bookId);
-    
+
     if (index !== -1) {
         books[index].isComplete = false;
         document.dispatchEvent(new Event("bookChanged"));
@@ -57,6 +57,53 @@ function deleteBook(event) {
     const bookId = Number(event.target.closest('[data-bookid]').getAttribute('data-bookid'));
     books = books.filter(book => book.id !== bookId);
     document.dispatchEvent(new Event("bookChanged"));
+}
+
+function editBook(event) {
+    const bookId = Number(event.target.closest('[data-bookid]').getAttribute('data-bookid'));
+    const index = books.findIndex(book => book.id === bookId);
+
+    if (index !== -1) {
+        const book = books[index];
+
+        // Populate form with book data
+        document.querySelector("#editBookFormTitle").value = book.title;
+        document.querySelector("#editBookFormAuthor").value = book.author;
+        document.querySelector("#editBookFormYear").value = book.year;
+        document.querySelector("#editBookFormIsComplete").checked = book.isComplete;
+        document.querySelector("#editBookId").value = book.id;
+
+        // Show edit form
+        document.querySelector("#editBookForm").classList.remove("hidden");
+
+        editForm.scrollIntoView({ behavior: "smooth" });
+    }
+}
+
+function saveEditedBook(event) {
+    event.preventDefault();
+
+    const bookId = Number(document.querySelector("#editBookId").value);
+    const index = books.findIndex(book => book.id === bookId);
+
+    if (index !== -1) {
+        books[index].title = document.querySelector("#editBookFormTitle").value;
+        books[index].author = document.querySelector("#editBookFormAuthor").value;
+        books[index].year = document.querySelector("#editBookFormYear").value;
+        books[index].isComplete = document.querySelector("#editBookFormIsComplete").checked;
+
+        document.dispatchEvent(new Event("bookChanged"));
+
+        // Hide edit form and reset
+        document.querySelector("#editBookForm").classList.add("hidden");
+        event.target.reset();
+    }
+}
+
+function cancelEdit() {
+    // Hide the edit form and reset its values
+    document.querySelector("#editBookForm").classList.add("hidden");
+    document.querySelector("#editBookForm").reset();
 }
 
 function displayBooks(booksToDisplay) {
@@ -89,6 +136,12 @@ function displayBooks(booksToDisplay) {
 
         const actionDiv = document.createElement("div");
 
+        // Tombol edit
+        const editButton = document.createElement("button");
+        editButton.setAttribute("data-testid", "bookItemEditButton");
+        editButton.innerText = "Edit";
+        editButton.addEventListener("click", editBook);
+
         // Tombol untuk menyelesaikan buku
         const completeButton = document.createElement("button");
         completeButton.setAttribute("data-testid", "bookItemIsCompleteButton");
@@ -115,9 +168,10 @@ function displayBooks(booksToDisplay) {
             actionDiv.appendChild(completeButton);
             incompleteList.appendChild(bookItem);
         }
-        
+
+        actionDiv.appendChild(editButton); // Tambah tombol edit
         actionDiv.appendChild(deleteButton);
-        
+
         // Menambahkan elemen ke dalam item buku
         bookItem.appendChild(title);
         bookItem.appendChild(author);
@@ -158,26 +212,30 @@ function displaySearchResults(filteredBooks) {
         
         toggleButton.addEventListener("click", function() {
             if (book.isComplete) {
-                // Pindahkan ke "Belum selesai dibaca"
                 moveToIncomplete({ target: bookItem });
-                book.isComplete = false; // Update status di array
-                status.innerText = "Status: Belum selesai dibaca"; // Perbarui tampilan status
-                toggleButton.innerText = "Selesai dibaca"; // Perbarui tombol
+                book.isComplete = false;
+                status.innerText = "Status: Belum selesai dibaca";
+                toggleButton.innerText = "Selesai dibaca";
             } else {
-                // Pindahkan ke "Selesai dibaca"
                 completeBook({ target: bookItem });
-                book.isComplete = true; // Update status di array
-                status.innerText = "Status: Selesai dibaca"; // Perbarui tampilan status
-                toggleButton.innerText = "Belum Selesai dibaca"; // Perbarui tombol
+                book.isComplete = true;
+                status.innerText = "Status: Selesai dibaca";
+                toggleButton.innerText = "Belum Selesai dibaca";
             }
-            document.dispatchEvent(new Event("bookChanged")); // Dispatch event untuk menyimpan ke local storage
+            document.dispatchEvent(new Event("bookChanged"));
         });
+
+        const editButton = document.createElement("button");
+        editButton.setAttribute("data-testid", "searchResultEditButton");
+        editButton.innerText = "Edit";
+        editButton.addEventListener("click", editBook);
 
         bookItem.appendChild(title);
         bookItem.appendChild(author);
         bookItem.appendChild(year);
         bookItem.appendChild(status);
-        bookItem.appendChild(toggleButton); // Tambahkan tombol toggle status
+        bookItem.appendChild(toggleButton);
+        bookItem.appendChild(editButton); // Tambah tombol edit
 
         searchResultsList.appendChild(bookItem);
     }
@@ -194,8 +252,11 @@ window.addEventListener("load", () => {
 
     const bookForm = document.querySelector("#bookForm");
     const searchForm = document.querySelector("#searchBook");
-    
+    const editBookForm = document.querySelector("#editBookForm");
+
     bookForm.addEventListener("submit", addBook);
     searchForm.addEventListener("submit", searchBook);
+    editBookForm.addEventListener("submit", saveEditedBook);
+    document.querySelector("#cancelEditButton").addEventListener("click", cancelEdit);
     document.addEventListener("bookChanged", saveToLocalStorage);
 });

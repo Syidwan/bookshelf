@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bookshelf App</title>
-
+    <link rel="stylesheet" href="style.css">
     <!-- Impor script kamu di sini -->
     <!-- Lampirkan `defer` jika pemanggilan dilakukan dalam <head> -->
     <script defer src="main.js"></script>
@@ -43,6 +43,22 @@
           </button>
         </form>
       </section>
+      <section>
+        <h2>Edit Buku</h2>
+        <form id="editBookForm" class="hidden">          
+          <input type="hidden" id="editBookId">
+          <label for="editBookFormTitle">Judul Buku:</label>
+          <input type="text" id="editBookFormTitle" required>
+          <label for="editBookFormAuthor">Penulis Buku:</label>
+          <input type="text" id="editBookFormAuthor" required>
+          <label for="editBookFormYear">Tahun Terbit:</label>
+          <input type="number" id="editBookFormYear" required>
+          <label for="editBookFormIsComplete">Sudah selesai dibaca?</label>
+          <input type="checkbox" id="editBookFormIsComplete">
+          <button type="submit">Simpan Perubahan</button>
+          <button type="button" id="cancelEditButton">Batal</button>
+      </form>
+    </section>
 
       <section>
         <h2>Cari Buku</h2>

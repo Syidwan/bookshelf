@@ -1,0 +1,205 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body, input, button {
+  font-family: 'Open Sans', sans-serif;
+}
+
+button {
+   font-size: 16px;
+}
+
+
+input {
+   display: block;
+   font-size: 16px;
+   width: 100%;
+   padding: 5px;
+}
+
+.checkbox-container {
+   display: flex;
+   align-items: center; 
+}
+.selesai {
+   display: inline-block; 
+   margin-left: 10px; 
+   width: 10%;
+}
+
+form input[type="checkbox"].selesai {
+   margin-left: 10px; 
+   display: inline-block;
+}
+
+header {
+  background-color: #273636;
+  color: white;
+  padding: 12px;
+  text-align: center;
+}
+
+main {
+  max-width: 800px;
+  width: 80%;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+section {
+  margin-bottom: 16px;
+  padding: 16px;
+  border: 1px solid black;
+  border-radius: 10px;
+  margin-top: 16px
+}
+
+section > h2 {
+  color: #273636;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+
+.input {
+  display: flex;
+  flex-direction: column; 
+  margin: 8px 0;
+}
+
+.input > label {
+  color: #273636;
+  font-weight: bold;
+  margin-bottom: 4px; 
+}
+
+.input > input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form > button {
+  background-color: #273636;
+  color: white;
+  border: 0;
+  border-radius: 5px;
+  padding: 10px; 
+  cursor: pointer;
+  transition: background-color 0.3s; 
+}
+
+form > label {
+   display: flex;
+   align-items: center;
+ }
+
+form > button:hover {
+  background-color: #273636; 
+}
+
+
+.input_inline {
+  display: flex;
+  align-items: center;
+}
+
+.input_inline > label {
+  margin-right: 10px;
+}
+
+.hidden {
+   display: none;
+   margin: 20px;
+}
+
+#searchBook {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-gap: 10px;
+  align-items: center;
+}
+
+#searchBook > label {
+  display: flex;
+  align-items: center;
+}
+
+#searchBook > input {
+  padding: 5px;
+  border-radius: 5px;
+}
+
+
+#searchBook > button {
+  background-color: #273636;
+  color: white;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Daftar Buku */
+#incompleteBookList, #completeBookList {
+  margin-top: 16px;
+}
+
+[data-testid="bookItem"] {
+  padding: 8px 16px;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+[data-testid="bookItem"] > h3, 
+[data-testid="bookItem"] > p {
+  margin: 8px 0;
+}
+
+[data-testid="bookItem"] > div > button {
+  border: 0;
+  padding: 5px;
+  margin-right: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+[data-testid="searchResultToggleButton"] {
+   background-color: darkgreen;
+   color: white;
+   border: 0;
+   padding: 5px;
+   margin-right: 5px;
+   border-radius: 5px;
+   cursor: pointer;
+ }
+
+ [data-testid="bookItemIsCompleteButton"] {
+   background-color: darkgreen;
+   color: white;
+ }
+
+[data-testid="bookItemMoveToIncompleteButton"] {
+   background-color: darkgreen;
+   color: white;
+ }
+
+
+[data-testid="bookItemDeleteButton"] {
+  background-color: darkred;
+  color: white;
+}
+
+[data-testid="bookItemEditButton"] {
+  background-color: darkblue;
+  color: white;
+}
